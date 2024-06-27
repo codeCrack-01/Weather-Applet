@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Home Page
+{% endblock title %}
+
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="searchBox" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 ms-auto" id="exampleModalLabel">Search Your City</h1>
+        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+        <form method="post" action="/home" style="display: block;">
+            <div class="modal-body"><input class="form-control" type="text" name="city" placeholder="Enter city name" required></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="Search">
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<br><br><br><br>
+
+<div class="box-container">
+  <div class="rounded-box">
+    <div class="weather-info contents">
+      {% if weather_data %}
+        <br>
+        <div class="container">
+            <img src="{{ url_for('static', filename='media/location.png') }}" alt="location" class="loc">
+            <div class="location-info">
+              <p class="location-name">{{weather_data.name}}</p>
+                <!-- Add additional information here if needed -->
+            </div>
+        </div>
+        <br><br><br>
+        
+        <div class="temp-display">
+          <div class="temp-info">
+            <img src="{{ iconURL }}" alt="Weather Icon">
+            <h2>{{ weather_data.main.temp }}°C</h2>
+          </div>
+          <div class="minMax">
+            <h5><img src="{{ url_for('static', filename='media/up_temp.png') }}" alt="UP" class="loc"> {{ weather_data.main.temp_max }}°</h5>
+            <h5><img src="{{ url_for('static', filename='media/down_temp.png') }}" alt="UP" class="loc"> {{ weather_data.main.temp_min }}°</h5>
+            <p>Feels like {{ weather_data.main.feels_like }}°</p>
+          </div>
+        </div>
+
+        <br><br>
+
+        <div class="boxes">
+          {% for forecast in forecasts %}
+          <div class="box">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <h5 class="card-title">{{ forecast.date }}</h5>
+                <p class="card-text">{{ forecast.temperature }}°C</p>
+                <p class="card-text">-</p>
+                <p class="card-text">{{ forecast.description }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <br><br>
+
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div>
+  {% if weather_data %}
+  <br><br>
+    <div class="secBox">
+      <div class="box2">
+        <h5>Wind Speed</h5>
+        <p> {{ weather_data.wind.speed }} knots </p>
+      </div>
+      <div class="box2">
+        <h2>Humidity</h2>
+        <p> {{ weather_data.main.humidity }} % </p>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock content %}
+
+{# {% if weather_data %}
+  <h2>Weather in {{ weather_data.name }}</h2>
+  <h2>{{ day }}, {{ date }}</h2>
+  <p>Temperature: {{ weather_data.main.temp }}°C</p>
+  <p>Weather: {{ weather_data.weather[0].description }}</p>
+  <p>Humidity: {{ weather_data.main.humidity }}%</p>
+  <p>Wind Speed: {{ weather_data.wind.speed }} m/s</p>
+{% endif %} #}
